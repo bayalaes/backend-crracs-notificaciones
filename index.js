@@ -2,10 +2,7 @@
 
 const express = require("express");
 const admin = require("firebase-admin");
-const dotenv = require("dotenv");
 const cors = require("cors");
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,14 +11,14 @@ const API_SECRET = process.env.API_SECRET;
 app.use(cors());
 app.use(express.json());
 
-// ✅ Inicializar Firebase Admin desde variable de entorno
-const serviceAccount = JSON.parse(process.env.GOOGLE_CREDENTIALS);
+// ✅ Inicializar Firebase Admin usando archivo secreto montado por Render
+const serviceAccount = require("/etc/secrets/serviceAccountKey.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-// Middleware de verificación de token
+// Middleware de autenticación simple
 function verificarToken(req, res, next) {
   const token = req.headers["x-api-key"];
   if (!token || token !== API_SECRET) {
