@@ -14,8 +14,8 @@ const API_SECRET = process.env.API_SECRET;
 app.use(cors());
 app.use(express.json());
 
-// Inicializar Firebase Admin con credenciales
-const serviceAccount = require("./serviceAccountKey.json");
+// ✅ Inicializar Firebase Admin desde variable de entorno
+const serviceAccount = JSON.parse(process.env.GOOGLE_CREDENTIALS);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -60,7 +60,5 @@ app.post("/enviar-notificacion", verificarToken, async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(
-    `🚀 Servidor de notificaciones escuchando en http://localhost:${PORT}`
-  );
+  console.log(`🚀 Servidor de notificaciones escuchando en http://localhost:${PORT}`);
 });
